@@ -4,6 +4,7 @@ import torch.nn as nn
 import torchvision.transforms as T
 from torchvision import models
 from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
 
 # load the model
 checkpoint = torch.load('model.pth', map_location='cpu')
@@ -19,14 +20,22 @@ transform = T.Compose([
     T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-modelname = {
-    'efficientnet_b0': 'EfficientNet',
-    'resnet50': 'ResNet50',
-    'vit_b_16': 'ViT',
-    'squeezenet1_0': 'SqueezeNet',
-    'inception_v3': 'Inception-v3',
-    'mobilenet_v3_large': 'MobileNet-v3'
-}
+if model_type == 'inception_v3':
+        transform = T.Compose([
+            T.Resize(299),
+            T.CenterCrop(299),
+            T.ToTensor(),
+            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+else:
+        modelname = {
+        'efficientnet_b0': 'EfficientNet',
+        'resnet50': 'ResNet50',
+        'vit_b_16': 'ViT',
+        'squeezenet1_0': 'SqueezeNet',
+        'inception_v3': 'Inception-v3',
+        'mobilenet_v3_large': 'MobileNet-v3'
+        }
 
 # check the model type and make the model
 if model_type == 'resnet50':
@@ -47,12 +56,6 @@ elif model_type == 'squeezenet1_0':
 elif model_type == 'inception_v3':
         model = models.inception_v3(pretrained=False, aux_logits=False)
         model.fc = nn.Linear(model.fc.in_features, num_classes)
-        # transform = T.Compose([
-        #     T.Resize(299),
-        #     T.CenterCrop(299),
-        #     T.ToTensor(),
-        #     T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        # ])
 else:
         raise ValueError(f"Unsupported model type: {model_type}")
 
@@ -67,27 +70,58 @@ st.title("Ants vs. Bees Image Classifier")
 
 st.write("Model type: ", modelname.get(model_type))
 
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+# uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+uploaded_files = st.file_uploader("Upload all images from a folder...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded Image")
+def classify_image(file):
+    image = Image.open(file).convert("RGB")
+    input_tensor = transform(image).unsqueeze(0)
 
-    if st.button("Classify"):
-        with st.spinner("Classifying..."):
-            input_tensor = transform(image).unsqueeze(0)
+    with torch.no_grad():
+        output = model(input_tensor)
+        probabilities = torch.nn.functional.softmax(output[0], dim=0)
+        predicted_class_index = torch.argmax(probabilities).item()
+        predicted_class = classes[predicted_class_index]
+        confidence = probabilities[predicted_class_index].item() * 100
 
-            with torch.no_grad():
-                output = model(input_tensor)
-                probabilities = torch.nn.functional.softmax(output[0], dim=0) # Softmax for probabilities
-                predicted_class_index = torch.argmax(probabilities).item()
-                predicted_class = classes[predicted_class_index]
-                confidence = probabilities[predicted_class_index].item() * 100
+    return {
+        "filename": file.name,
+        "image": image,
+        "prediction": predicted_class,
+        "confidence": confidence,
+        "probabilities": probabilities
+    }
 
-            st.header("Prediction")
-            st.write(f"The image is a {predicted_class} with {confidence:.2f}% confidence.")
+if 'results' not in st.session_state:
+    st.session_state.results = []
+if 'index' not in st.session_state:
+    st.session_state.index = 0
 
-            # Display probabilities for each class
-            st.subheader("Class Probabilities")
-            for i, class_name in enumerate(classes):
-              st.write(f"{class_name}: {probabilities[i].item()*100:.2f}%")
+if uploaded_files and st.button("Classify All Images"):
+    with st.spinner("Classifying images..."):
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            st.session_state.results = list(executor.map(classify_image, uploaded_files))
+        st.session_state.index = 0
+        st.success("Classification complete!")
+
+results = st.session_state.get("results", [])
+if results:
+    current = st.session_state.index
+    total = len(results)
+    result = results[current]
+
+    st.subheader(f"Image {current + 1} of {total}: {result['filename']}")
+    st.image(result['image'], caption=f"Prediction: {result['prediction']} ({result['confidence']:.2f}%)", use_container_width=True)
+    st.subheader("Class Probabilities")
+    for i, class_name in enumerate(classes):
+        st.write(f"{class_name}: {result['probabilities'][i].item()*100:.2f}%")
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col1:
+        if st.button("⬅️ Previous", disabled=current <= 0):
+            st.session_state.index -= 1
+            st.rerun()
+    with col3:
+        if st.button("Next ➡️", disabled=current >= total - 1):
+            st.session_state.index += 1
+            st.rerun()
