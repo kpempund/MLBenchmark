@@ -8,14 +8,7 @@ This project benchmarks the performance of six deep learning models in a binary 
 
 The benchmarking results were obtained through a combination of PyTorch evaluation and system monitoring tools. Each model was tested on identical input data and metrics were recorded using both `time` and `psutil` for accuracy, inference speed, GPU utilization, and memory usage.
 
-| Model           | Accuracy | Precision | Recall | F1-score | Inference Time (ms) | Params (M) | GPU Util (%) | VRAM Usage (MB) |
-|----------------|----------|-----------|--------|----------|----------------------|------------|---------------|------------------|
-| **ResNet50**        | **0.992**  | 0.992     | 0.992  | 0.992    | 3.08                 | 89.7       | 11.0%         | 212              |
-| **EfficientNet-b0** | 0.988    | 0.988     | 0.988  | 0.988    | 1.65                 | 5.3        | 1.4%          | 292              |
-| **MobileNet-v3**    | 0.971    | 0.972     | 0.971  | 0.971    | **1.38**             | 5.4        | 7.6%          | 189              |
-| **ViT (B-16)**      | 0.980    | 0.980     | 0.980  | 0.980    | **26.08**            | 85.8       | **76.1%**     | 228              |
-| **SqueezeNet**      | 0.955    | 0.955     | 0.955  | 0.955    | 1.80                 | **2.8**    | 12.5%         | 211              |
-| **Inception-v3**    | 0.934    | 0.934     | 0.934  | 0.934    | 4.33                 | 27.2       | 50.05%        | **432**          |
+![image](https://github.com/user-attachments/assets/80c4ccbc-00dd-4f93-b284-2db314dd305e)
 
 ---
 
