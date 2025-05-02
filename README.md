@@ -46,6 +46,15 @@ The benchmarking results were obtained through a combination of PyTorch evaluati
 - `benchmark_results.csv`: Result of model benchmarking in CSV format
 - `enhanced_benchmark_results.png`: Visualized result of model benchmarking
 
+---
+
+## 🛠️ Set Up
+
+**Install all dependencies**:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ---
 
