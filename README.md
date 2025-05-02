@@ -56,15 +56,56 @@ The benchmarking results were obtained through a combination of PyTorch evaluati
 
 ---
 
-## ▶️ Running the Benchmark and the Web App
-
-Run the program first by
+## ▶️ Running the Benchmark
 
 ```bash
 jupyter notebook MLBenchmark.ipynb
 ```
 
-After the program finished, run the web app by
+Once the notebook is running, you will be prompted to **select which models you want to benchmark** by entering numbers corresponding to each model:
+
+```
+1. EfficientNet  
+2. ResNet50  
+3. ViT  
+4. SqueezeNet  
+5. Inception-v3  
+6. MobileNet-v3  
+0. Exit  
+```
+
+Enter one model number at a time, pressing **Enter** after each selection.  
+When you're done selecting, input **0** to start the benchmarking process.
+
+The notebook will then:
+- Run all selected models
+- Measure performance metrics
+- Display comparison graphs and resource usage summaries
+
+---
+
+## 💾 Exporting a Trained Model
+
+After benchmarking, you can select **one of the evaluated models to export** for later use in the Streamlit app.
+
+At the end of the notebook, you will be prompted to:
+
+1. Choose a model from the list of benchmarked models by entering its number.
+2. The selected model will be saved as `model.pth`, containing:
+   - `model_type`: the architecture name (e.g., 'resnet50')
+   - `num_classes`: number of output classes (e.g., 2)
+   - `model_state_dict`: the trained model weights
+
+This file can then be directly used by `app.py` for image classification in the web interface.
+
+---
+
+## 🖼️ Web App
+
+After finished running the program, opne terminal and run:
 
 ```bash
 streamlit run app.py
+```
+
+User can upload multiple images and get predictions and the confidence scores
