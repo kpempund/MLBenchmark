@@ -52,9 +52,9 @@ The benchmarking results were obtained through a combination of PyTorch evaluati
 
 **Install all dependencies**:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
