@@ -60,10 +60,6 @@ pip install -r requirements.txt
 
 ## ▶️ Running the Benchmark
 
-```bash
-jupyter notebook MLBenchmark.ipynb
-```
-
 Once the notebook is running, you will be prompted to **select which models you want to benchmark** by entering numbers corresponding to each model:
 
 ```
