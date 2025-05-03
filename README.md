@@ -50,6 +50,8 @@ The benchmarking results were obtained through a combination of PyTorch evaluati
 
 ## 📩 Downloading the Dataset Here
 
+Download the whole **hymenoptera_data** fodler as the dataset folder
+
 https://drive.google.com/drive/folders/186dYZRP7HnqJn-MYz6UtCPovRZOFP-IH?usp=sharing
 
 ---
