@@ -100,7 +100,7 @@ This file can then be directly used by `app.py` for image classification in the 
 
 ## 🖼️ Web App
 
-After finished running the program, opne terminal and run:
+After finished running the program, open terminal and run:
 
 ```bash
 streamlit run app.py
