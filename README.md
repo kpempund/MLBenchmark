@@ -6,7 +6,7 @@ This project benchmarks the performance of six deep learning models in a binary 
 
 ## 🎥 Demonstration Video
 
-![Demonstration](https://drive.google.com/uc?id=1DqWm5M5ML4GNgI5Th7-YFxW4x3yLHO0r)
+[Watch the video here](https://drive.google.com/file/d/1dQw4Fu7i_RoEo8vHk0Knz8Mv-MidduNd/view?usp=sharing)
 
 ---
 
