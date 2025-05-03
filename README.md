@@ -4,6 +4,12 @@ This project benchmarks the performance of six deep learning models in a binary 
 
 ---
 
+## 🎥 Demonstration Video
+
+https://drive.google.com/file/d/1DqWm5M5ML4GNgI5Th7-YFxW4x3yLHO0r/view?usp=sharing
+
+---
+
 ## 📊 Model Performance Comparison
 
 The benchmarking results were obtained through a combination of PyTorch evaluation and system monitoring tools. Each model was tested on identical input data and metrics were recorded using both `time` and `psutil` for accuracy, inference speed, GPU utilization, and memory usage.
